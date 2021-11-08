@@ -60,7 +60,7 @@ function exportCalendar()
     })();
 
     // Get events in timetable
-    let day = 1;
+    let day = 0;
     let lastTime = 0;
     document.querySelectorAll(".Timetable-TimetableItem").forEach(e =>
     {
@@ -69,12 +69,18 @@ function exportCalendar()
         const subject = e.querySelector(".Timetable-TimetableItem-subject-name").innerHTML;
         const location = e.querySelector(".Timetable-TimetableItem-location").innerHTML.substr(-4, 3); // FIXME: Does not work when location is GymX
 
+        const startHours = parseInt(startTime.substr(0, 2));
+        const startMinutes = parseInt(startTime.substr(3, 2));
+
+        const endHours = parseInt(endTime.substr(0, 2));
+        const endMinutes = parseInt(endTime.substr(3, 2));
+
         // FIXME: This way of doing time calculation can fail in very rare cases, consider using left offset instead
         const currentTime = parseInt(startTime.substr(0, 2));
         if (currentTime < lastTime) day++;
         lastTime = currentTime;
 
-        console.log(`Dag ${day}`, startTime, endTime, subject, `Rom ${location}`);
+        console.log(`Dag ${day + 1}`, new Date(new Date(Date.parse(dates[day])).setHours(startHours, startMinutes)), new Date(new Date(Date.parse(dates[day])).setHours(endHours, endMinutes)), subject, `Rom ${location}`);
     });
 
     // Create calendar object
