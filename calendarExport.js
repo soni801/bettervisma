@@ -1,10 +1,3 @@
-// Create calendar object
-const calendar = ics();
-
-// Add events to calendar
-calendar.addEvent("Test subject", "Test description", "Test location", "8/11/2021 17:00", "8/11/2021 18:00");
-calendar.addEvent("Test subject 2", "Test description 2", "Test location 2", "8/11/2021 19:00", "8/11/2021 20:00");
-
 // Create export button
 const exportButton = document.createElement("button");
 
@@ -66,7 +59,14 @@ function exportCalendar()
         return result;
     })();
 
-    console.log(dates);
+    // Create calendar object
+    const calendar = ics();
 
-    // calendar.download('test-event', '.ics');
+    // Add events to calendar
+    for (let i = 0; i < 5; i++)
+    {
+        calendar.addEvent(`Day ${i + 1}`, "Description", "Location", dates[i], dates[i]);
+    }
+
+    calendar.download('test-event', '.ics');
 }
