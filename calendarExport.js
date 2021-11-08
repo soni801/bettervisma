@@ -8,8 +8,8 @@ calendar.addEvent("Test subject 2", "Test description 2", "Test location 2", "8/
 // Create export button
 const exportButton = document.createElement("button");
 
-exportButton.innerHTML = "Export to calendar";
-exportButton.onclick = () => calendar.download('test-event', '.ics');
+exportButton.innerHTML = "Eksporter til kalender";
+exportButton.onclick = exportCalendar;
 
 // Style export button
 exportButton.style.background = "transparent";
@@ -36,3 +36,37 @@ let observer = new MutationObserver(() =>
 
 // Start observer
 observer.observe(document.body, { childList: true, subtree: true, attributes: false, characterData: false });
+
+// Function for exporting the calendar
+function exportCalendar()
+{
+    // Store dates for current week
+    const dates = (() =>
+    {
+        // Create result object
+        const result = [];
+
+        // Get the first date
+        const firstDate = (() =>
+        {
+            const date = document.querySelector(".vsware-input.form-control.vs-Flatpickr.flatpickr-input.dateControl-flatpickr").value.split(".");
+            return `${date[1]}/${date[0]}/${date[2]}`;
+        })();
+
+        // Create Date object
+        let day = new Date(Date.parse(firstDate));
+
+        // Add dates to result
+        for (let i = 0; i < 5; i++)
+        {
+            result.push(day.toString());
+            day.setDate(day.getDate() + 1);
+        }
+
+        return result;
+    })();
+
+    console.log(dates);
+
+    // calendar.download('test-event', '.ics');
+}
