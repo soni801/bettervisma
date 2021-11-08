@@ -71,7 +71,7 @@ function exportCalendar()
         const startTime = e.querySelector(".Timetable-TimetableItem-hours").innerHTML.substr(-14, 5);
         const endTime = e.querySelector(".Timetable-TimetableItem-hours").innerHTML.substr(-6, 5);
         const subject = e.querySelector(".Timetable-TimetableItem-subject-name").innerHTML;
-        const location = e.querySelector(".Timetable-TimetableItem-location").innerHTML.substr(-4, 3); // FIXME: Does not work when location is GymX
+        const location = e.querySelector(".Timetable-TimetableItem-location").innerHTML.substr(-5, 4).trim();
 
         // Parse hours and minutes
         const startHours = parseInt(startTime.substr(0, 2));
