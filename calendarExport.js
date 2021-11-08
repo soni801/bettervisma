@@ -33,6 +33,9 @@ observer.observe(document.body, { childList: true, subtree: true, attributes: fa
 // Function for exporting the calendar
 function exportCalendar()
 {
+    // Create calendar object
+    const calendar = ics();
+
     // Store dates for current week
     const dates = (() =>
     {
@@ -59,22 +62,25 @@ function exportCalendar()
         return result;
     })();
 
-    // Get events in timetable
+    // Get items in timetable
     let day = 0;
     let lastTime = 0;
     document.querySelectorAll(".Timetable-TimetableItem").forEach(e =>
     {
+        // Get data from timetable item
         const startTime = e.querySelector(".Timetable-TimetableItem-hours").innerHTML.substr(-14, 5);
         const endTime = e.querySelector(".Timetable-TimetableItem-hours").innerHTML.substr(-6, 5);
         const subject = e.querySelector(".Timetable-TimetableItem-subject-name").innerHTML;
         const location = e.querySelector(".Timetable-TimetableItem-location").innerHTML.substr(-4, 3); // FIXME: Does not work when location is GymX
 
+        // Parse hours and minutes
         const startHours = parseInt(startTime.substr(0, 2));
         const startMinutes = parseInt(startTime.substr(3, 2));
 
         const endHours = parseInt(endTime.substr(0, 2));
         const endMinutes = parseInt(endTime.substr(3, 2));
 
+        // Create Date objects for start and end
         const startDate = new Date(Date.parse(dates[day]));
         const endDate = new Date(Date.parse(dates[day]));
 
@@ -87,16 +93,11 @@ function exportCalendar()
         lastTime = currentTime;
 
         console.log(startDate, endDate, subject, `Rom ${location}`);
+
+        // Add events to calendar
+        calendar.addEvent(subject, "", `Rom ${location}`, startDate, endDate);
     });
 
-    // Create calendar object
-    const calendar = ics();
-
-    // Add events to calendar
-    for (let i = 0; i < 5; i++)
-    {
-        calendar.addEvent(`Day ${i + 1}`, "Description", "Location", dates[i], dates[i]);
-    }
-
-    // calendar.download('visma', '.ics');
+    // Download the calendar file in .ics format
+    calendar.download('visma', '.ics');
 }
