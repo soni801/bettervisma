@@ -59,6 +59,24 @@ function exportCalendar()
         return result;
     })();
 
+    // Get events in timetable
+    let day = 1;
+    let lastTime = 0;
+    document.querySelectorAll(".Timetable-TimetableItem").forEach(e =>
+    {
+        const startTime = e.querySelector(".Timetable-TimetableItem-hours").innerHTML.substr(-14, 5);
+        const endTime = e.querySelector(".Timetable-TimetableItem-hours").innerHTML.substr(-6, 5);
+        const subject = e.querySelector(".Timetable-TimetableItem-subject-name").innerHTML;
+        const location = e.querySelector(".Timetable-TimetableItem-location").innerHTML.substr(-4, 3); // FIXME: Does not work when location is GymX
+
+        // FIXME: This way of doing time calculation can fail in very rare cases, consider using left offset instead
+        const currentTime = parseInt(startTime.substr(0, 2));
+        if (currentTime < lastTime) day++;
+        lastTime = currentTime;
+
+        console.log(`Dag ${day}`, startTime, endTime, subject, `Rom ${location}`);
+    });
+
     // Create calendar object
     const calendar = ics();
 
@@ -68,5 +86,5 @@ function exportCalendar()
         calendar.addEvent(`Day ${i + 1}`, "Description", "Location", dates[i], dates[i]);
     }
 
-    calendar.download('test-event', '.ics');
+    // calendar.download('visma', '.ics');
 }
