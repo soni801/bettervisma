@@ -1,0 +1,19 @@
+{
+    "manifest_version": 2,
+    "name": "Visma calendar export",
+    "version": "1.0",
+    "description": "Adds an option to export a week of your Visma schedule to a calendar .ics file",
+
+    "content_scripts": [
+        {
+            "matches": [
+                "*://*.inschool.visma.no/*"
+            ],
+            "js": [
+                "libFileSaver.min.js",
+                "libIcs.min.js",
+                "calendarExport.js"
+            ]
+        }
+    ]
+}
