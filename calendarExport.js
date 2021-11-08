@@ -64,7 +64,7 @@ function exportCalendar()
 
     // Get items in timetable
     let day = 0;
-    let lastTime = 0;
+    let lastOffset = 0;
     document.querySelectorAll(".Timetable-TimetableItem").forEach(e =>
     {
         // Get data from timetable item
@@ -80,10 +80,10 @@ function exportCalendar()
         const endHours = parseInt(endTime.substr(0, 2));
         const endMinutes = parseInt(endTime.substr(3, 2));
 
-        // FIXME: This way of doing time calculation can fail in very rare cases, consider using left offset instead
-        const currentTime = parseInt(startTime.substr(0, 2));
-        if (currentTime < lastTime) day++;
-        lastTime = currentTime;
+        // Increment day when needed
+        const currentOffset = e.getBoundingClientRect().left;
+        if (currentOffset > lastOffset) day++;
+        lastOffset = currentOffset;
 
         // Create Date objects for start and end
         const startDate = new Date(Date.parse(dates[day]));
@@ -91,8 +91,6 @@ function exportCalendar()
 
         startDate.setHours(startHours, startMinutes);
         endDate.setHours(endHours, endMinutes);
-
-        console.log(startDate, endDate, subject, `Rom ${location}`);
 
         // Add events to calendar
         calendar.addEvent(subject, "", `Rom ${location}`, startDate, endDate);
