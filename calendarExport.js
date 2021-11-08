@@ -11,6 +11,16 @@ const exportButton = document.createElement("button");
 exportButton.innerHTML = "Export to calendar";
 exportButton.onclick = () => calendar.download('test-event', '.ics');
 
+// Style export button
+exportButton.style.background = "transparent";
+exportButton.style.border = "1px solid #b6bec4";
+exportButton.style.borderRadius = "2px";
+exportButton.style.padding = "7.5px";
+exportButton.style.fontSize = "14px";
+exportButton.style.fontWeight = "600";
+exportButton.style.fontWeight = "600";
+exportButton.style.lineHeight = "16px";
+
 // Add export button on mutation
 let observer = new MutationObserver(() =>
 {
