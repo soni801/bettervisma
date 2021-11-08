@@ -80,17 +80,17 @@ function exportCalendar()
         const endHours = parseInt(endTime.substr(0, 2));
         const endMinutes = parseInt(endTime.substr(3, 2));
 
+        // FIXME: This way of doing time calculation can fail in very rare cases, consider using left offset instead
+        const currentTime = parseInt(startTime.substr(0, 2));
+        if (currentTime < lastTime) day++;
+        lastTime = currentTime;
+
         // Create Date objects for start and end
         const startDate = new Date(Date.parse(dates[day]));
         const endDate = new Date(Date.parse(dates[day]));
 
         startDate.setHours(startHours, startMinutes);
         endDate.setHours(endHours, endMinutes);
-
-        // FIXME: This way of doing time calculation can fail in very rare cases, consider using left offset instead
-        const currentTime = parseInt(startTime.substr(0, 2));
-        if (currentTime < lastTime) day++;
-        lastTime = currentTime;
 
         console.log(startDate, endDate, subject, `Rom ${location}`);
 
