@@ -4,6 +4,10 @@
     "version": "1.0",
     "description": "Adds an option to export a week of your Visma schedule to a calendar .ics file",
 
+    "icons": {
+        "48": "icons/calendar-48.png"
+    },
+
     "content_scripts": [
         {
             "matches": [
