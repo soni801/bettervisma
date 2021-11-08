@@ -75,12 +75,18 @@ function exportCalendar()
         const endHours = parseInt(endTime.substr(0, 2));
         const endMinutes = parseInt(endTime.substr(3, 2));
 
+        const startDate = new Date(Date.parse(dates[day]));
+        const endDate = new Date(Date.parse(dates[day]));
+
+        startDate.setHours(startHours, startMinutes);
+        endDate.setHours(endHours, endMinutes);
+
         // FIXME: This way of doing time calculation can fail in very rare cases, consider using left offset instead
         const currentTime = parseInt(startTime.substr(0, 2));
         if (currentTime < lastTime) day++;
         lastTime = currentTime;
 
-        console.log(`Dag ${day + 1}`, new Date(new Date(Date.parse(dates[day])).setHours(startHours, startMinutes)), new Date(new Date(Date.parse(dates[day])).setHours(endHours, endMinutes)), subject, `Rom ${location}`);
+        console.log(startDate, endDate, subject, `Rom ${location}`);
     });
 
     // Create calendar object
