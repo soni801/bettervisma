@@ -63,7 +63,7 @@ function exportCalendar()
     })();
 
     // Get items in timetable
-    let day = 0;
+    let day = -1;
     let lastOffset = 0;
     document.querySelectorAll(".Timetable-TimetableItem").forEach(e =>
     {
