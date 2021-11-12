@@ -19,5 +19,11 @@
                 "calendarExport.js"
             ]
         }
-    ]
+    ],
+
+    "browser_specific_settings": {
+        "gecko": {
+            "update_url": "https://cdn.yessness.com/browser-extensions/updates.json"
+        }
+    }
 }
