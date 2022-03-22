@@ -4,12 +4,23 @@ stylesheet.innerHTML = `
 #bettervisma-export
 {
     background: transparent;
-    border: 1px solid #b6bec4;
-    border-radius: 2px;
+    border: 0.071em solid #ccc;
+    border-radius: 0.286em;
     padding: 7.5px;
-    font-size: 14px;
     font-weight: 600;
-    line-height: 16px;
+    transform: translate(1rem, .4rem);
+    height: 34px;
+    transition: 100ms ease;
+}
+
+#bettervisma-export:hover
+{
+    background: #edeeef;
+}
+
+#bettervisma-export:active
+{
+    background: #dcddde;
 }
 `;
 
@@ -25,7 +36,7 @@ exportButton.onclick = exportCalendar;
 // Add export button on mutation
 let observer = new MutationObserver(() =>
 {
-    const node = document.querySelector(".userTimetable_timetableFilters");
+    const node = document.querySelector(".userTimetable_timetableFilters_left.userTimetable_timetableFilters_left_xl");
 
     if (node)
     {
