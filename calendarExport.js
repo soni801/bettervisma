@@ -52,11 +52,26 @@ let observer = new MutationObserver(() =>
 // Start observer
 observer.observe(document.body, { childList: true, subtree: true, attributes: false, characterData: false });
 
+// Greet user after a timeout to avoid warning spam
+setTimeout(() =>
+{
+    console.clear();
+
+    console.debug("Loaded BetterVisma")
+    console.log("%c[BetterVisma] Using BetterVisma", `
+        font-size: 1.6rem;
+    `);
+    console.info("Version 2.0");
+    console.info("%chttps://yessness.com/bettervisma", `
+        color: #007aca;
+    `);
+}, 1000);
+
 // Function for exporting the calendar
 function exportCalendar()
 {
     // Log progress
-    console.log("[BetterVisma] [INFO] Attempting export...");
+    console.info("[BetterVisma] [INFO] Attempting export...");
 
     // Create calendar object
     const calendar = ics();
@@ -81,7 +96,7 @@ function exportCalendar()
 
             // Calculate first day of week
             const firstDay = new Date(date.setDate(diff));
-            console.log("[BetterVisma] [DEBUG] Determined week start: " + firstDay);
+            console.debug("[BetterVisma] [DEBUG] Determined week start: " + firstDay);
             return firstDay;
         })();
 
@@ -92,29 +107,29 @@ function exportCalendar()
             day.setDate(day.getDate() + 1);
         }
 
-        console.log("[BetterVisma] [DEBUG] Received dates: " + result);
+        console.debug("[BetterVisma] [DEBUG] Received dates: " + result);
         return result;
     })();
 
     // Get items in timetable
     let day = -1;
     let lastOffset = 0;
-    console.log("[BetterVisma] [DEBUG] Saving data from timetable...");
+    console.debug("[BetterVisma] [DEBUG] Saving data from timetable...");
     document.querySelectorAll(".Timetable-TimetableItem").forEach(e =>
     {
         // Get data from timetable item
         // FIXME: substr() is deprecated, use substring()
-        const startTime = e.querySelector(".Timetable-TimetableItem-hours").innerHTML.substr(-14, 5);
-        const endTime = e.querySelector(".Timetable-TimetableItem-hours").innerHTML.substr(-6, 5);
-        const subject = e.querySelector(".Timetable-TimetableItem-subject-name").innerHTML;
-        const location = e.querySelector(".Timetable-TimetableItem-location").innerHTML.substr(-5, 4).trim();
+        const startTime = e.querySelector(".Timetable-TimetableItem-hours").innerHTML.substring(48, 53);
+        const endTime = e.querySelector(".Timetable-TimetableItem-hours").innerHTML.substring(56, 61);
+        const subject = e.querySelector(".Timetable-TimetableItem-subject-name").innerHTML.trim();
+        const location = e.querySelector(".Timetable-TimetableItem-location").innerHTML.substring(53).trim();
 
-        // Parse hours and minutes
-        const startHours = parseInt(startTime.substr(0, 2));
-        const startMinutes = parseInt(startTime.substr(3, 2));
+        // Parse time
+        const startHours = parseInt(startTime.substring(0, 2));
+        const startMinutes = parseInt(startTime.substring(3, 5));
 
-        const endHours = parseInt(endTime.substr(0, 2));
-        const endMinutes = parseInt(endTime.substr(3, 2));
+        const endHours = parseInt(endTime.substring(0, 2));
+        const endMinutes = parseInt(endTime.substring(3, 5));
 
         // Increment day when needed
         const currentOffset = e.getBoundingClientRect().left;
@@ -133,6 +148,6 @@ function exportCalendar()
     });
 
     // Download the calendar file in .ics format
-    calendar.download('visma', '.ics');
-    console.log("[BetterVisma] [INFO] Export successful, file downloaded");
+    calendar.download('visma-export', '.ics');
+    console.info("[BetterVisma] [INFO] Export successful, file downloaded");
 }
