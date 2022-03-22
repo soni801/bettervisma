@@ -67,18 +67,23 @@ function exportCalendar()
         // Create result object
         const result = [];
 
-        // Get the first date
-        console.log("[BetterVisma] [DEBUG] Fetching dates...");
-        const firstDate = (() =>
+        // Initialise day to the first day of the week
+        let day = (() =>
         {
-            const date = document.querySelector(".vsware-input.form-control.vs-Flatpickr.flatpickr-input").value.split(".");
-            const formattedDate = `${date[1]}/${date[0]}/${date[2]}`;
-            console.log("[BetterVisma] [DEBUG] Determined week start: " + formattedDate);
-            return formattedDate;
-        })();
+            // Get and format current date from UI
+            const inputDate = document.querySelector(".vsware-input.form-control.vs-Flatpickr.flatpickr-input").value.split(".");
+            const formattedDate = `${inputDate[1]}/${inputDate[0]}/${inputDate[2]}`;
 
-        // Create Date object
-        let day = new Date(Date.parse(firstDate));
+            // Get offset to first day of week
+            const date = new Date(Date.parse(formattedDate));
+            const day = date.getDay();
+            const diff = date.getDate() - day + (day === 0 ? -6 : 1);
+
+            // Calculate first day of week
+            const firstDay = new Date(date.setDate(diff));
+            console.log("[BetterVisma] [DEBUG] Determined week start: " + firstDay);
+            return firstDay;
+        })();
 
         // Add dates to result
         for (let i = 0; i < 5; i++)
