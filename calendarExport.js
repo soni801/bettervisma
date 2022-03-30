@@ -1,6 +1,7 @@
 // Add custom stylesheet
 const stylesheet = document.createElement("style");
 stylesheet.innerHTML = `
+/* Export button */
 #bettervisma-export
 {
     background: transparent;
@@ -22,8 +23,16 @@ stylesheet.innerHTML = `
 {
     background: #dcddde;
 }
+
+/* Current time line */
+.Timetable-TimetableNowLine
+{
+    z-index: 1;
+    filter: drop-shadow(0 0 4px rgba(0, 0, 0, .7));
+}
 `;
 
+stylesheet.setAttribute("id", "bettervisma");
 document.head.appendChild(stylesheet);
 
 // Create export button
@@ -118,7 +127,6 @@ function exportCalendar()
     document.querySelectorAll(".Timetable-TimetableItem").forEach(e =>
     {
         // Get data from timetable item
-        // FIXME: substr() is deprecated, use substring()
         const startTime = e.querySelector(".Timetable-TimetableItem-hours").innerHTML.substring(48, 53);
         const endTime = e.querySelector(".Timetable-TimetableItem-hours").innerHTML.substring(56, 61);
         const subject = e.querySelector(".Timetable-TimetableItem-subject-name").innerHTML.trim();
