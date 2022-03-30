@@ -24,6 +24,35 @@ stylesheet.innerHTML = `
     background: #dcddde;
 }
 
+/* Help button */
+#bettervisma-help
+{
+      transform: translate(20px, 5px);
+      cursor: pointer;
+      user-select: none;
+}
+
+/* Help menu */
+#bettervisma-help-menu
+{
+    position: absolute;
+    z-index: 10000;
+    inset: 0;
+    background: rgba(0, 0, 0, .5);
+    display: grid;
+    place-items: center;
+}
+
+#bettervisma-help-menu div
+{
+    background: white;
+    max-width: 40rem;
+    border-radius: 1rem;
+    padding: 0 2rem 2rem;
+    line-height: 1.6rem;
+    box-shadow: 0 0 2rem rgba(0, 0, 0, .3);
+}
+
 /* Current time line */
 .Timetable-TimetableNowLine
 {
@@ -32,28 +61,42 @@ stylesheet.innerHTML = `
 }
 `;
 
-stylesheet.setAttribute("id", "bettervisma");
+stylesheet.id ="bettervisma-style";
 document.head.appendChild(stylesheet);
+
+// Add google fonts
+const googleFontsLink = document.createElement("link");
+googleFontsLink.setAttribute("href", "https://fonts.googleapis.com/icon?family=Material+Icons");
+googleFontsLink.setAttribute("rel", "stylesheet");
+googleFontsLink.id = "bettervisma-font-link"
+document.head.appendChild(googleFontsLink);
 
 // Create export button
 const exportButton = document.createElement("button");
-
 exportButton.innerHTML = "Eksporter til kalender";
 exportButton.id = "bettervisma-export"
 exportButton.onclick = exportCalendar;
 
-// Add export button on mutation
+// Create help button
+const helpButton = document.createElement("span");
+helpButton.id = "bettervisma-help";
+helpButton.innerHTML = "help_outline";
+helpButton.classList.add("material-icons");
+helpButton.onclick = openHelpMenu;
+
+// Add elements on mutation
 let observer = new MutationObserver(() =>
 {
     const node = document.querySelector(".userTimetable_timetableFilters_left.userTimetable_timetableFilters_left_xl");
 
     if (node)
     {
-        // Inject button
+        // Inject elements
         node.appendChild(exportButton);
-        observer.disconnect();
+        node.appendChild(helpButton);
 
         // Restart observer for page redirects
+        observer.disconnect();
         setTimeout(() => observer.observe(document.body, { childList: true, subtree: true, attributes: false, characterData: false }), 100);
     }
 })
@@ -158,4 +201,27 @@ function exportCalendar()
     // Download the calendar file in .ics format
     calendar.download('visma-export', '.ics');
     console.info("[BetterVisma] [INFO] Export successful, file downloaded");
+}
+
+// Function for opening the help menu
+function openHelpMenu()
+{
+    // Create export button
+    const helpMenu = document.createElement("div");
+    helpMenu.innerHTML = `
+        <div>
+            <h1>Hvordan eksportere til kalender</h1>
+            <p>Trykk på <button id="bettervisma-export" style="transform: unset">Eksporter
+                til kalender</button>. Dette vil laste ned en <code>.ics</code> fil. Du kan åpne denne filen for å legge
+                den inn direkte i ditt operativsystem, eller importere den i f.eks. Google kalender.</p>
+            <p><i><b>NB!</b> Eksportert timeplan blir ikke automatisk oppdatert, og blir heller ikke slettet hvis du
+                importerer på nytt. Pass på å slette eksisterende kalender hvis du vil importere på nytt.</i></p>
+            <button onclick="this.parentElement.parentElement.remove()">Lukk</button>
+        </div>
+    `;
+
+    helpMenu.querySelector("#bettervisma-export").onclick = exportCalendar;
+
+    helpMenu.id = "bettervisma-help-menu"
+    document.body.appendChild(helpMenu);
 }
