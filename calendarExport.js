@@ -4,13 +4,13 @@ stylesheet.innerHTML = `
 /* Export button */
 #bettervisma-export
 {
+    height: 34px;
+    padding: 7.5px;
     background: transparent;
     border: 0.071em solid #ccc;
     border-radius: 0.286em;
-    padding: 7.5px;
     font-weight: 600;
     transform: translate(1rem, .4rem);
-    height: 34px;
     transition: 100ms ease;
 }
 
@@ -27,37 +27,34 @@ stylesheet.innerHTML = `
 /* Help button */
 #bettervisma-help
 {
-      transform: translate(20px, 5px);
-      cursor: pointer;
-      user-select: none;
+    cursor: pointer;
+    user-select: none;
+    transform: translate(20px, 5px);
 }
 
-/* Help menu */
-#bettervisma-help-menu
+/* Help dialog */
+#bettervisma-help-dialog
 {
-    position: absolute;
-    z-index: 10000;
-    inset: 0;
-    background: rgba(0, 0, 0, .5);
-    display: grid;
-    place-items: center;
-}
-
-#bettervisma-help-menu div
-{
-    background: white;
     max-width: 40rem;
-    border-radius: 1rem;
     padding: 0 2rem 2rem;
+    border: none;
+    border-radius: 1rem;
     line-height: 1.6rem;
     box-shadow: 0 0 2rem rgba(0, 0, 0, .3);
+}
+
+/* Current day */
+.active.Timetable-TimetableDays_day
+{
+    background: rgba(0, 0, 0, .07);
 }
 
 /* Current time line */
 .Timetable-TimetableNowLine
 {
+    height: 2px !important;
     z-index: 1;
-    filter: drop-shadow(0 0 4px rgba(0, 0, 0, .7));
+    filter: drop-shadow(0 0 4px rgba(0, 0, 0, .6));
 }
 `;
 
@@ -75,14 +72,31 @@ document.head.appendChild(googleFontsLink);
 const exportButton = document.createElement("button");
 exportButton.innerHTML = "Eksporter til kalender";
 exportButton.id = "bettervisma-export"
-exportButton.onclick = exportCalendar;
+exportButton.addEventListener("click", () => exportCalendar());
 
 // Create help button
 const helpButton = document.createElement("span");
 helpButton.id = "bettervisma-help";
 helpButton.innerHTML = "help_outline";
 helpButton.classList.add("material-icons");
-helpButton.onclick = openHelpMenu;
+helpButton.addEventListener("click", () => helpDialog.showModal());
+
+// Create help dialog
+const helpDialog = document.createElement("dialog");
+helpDialog.id = "bettervisma-help-dialog";
+helpDialog.innerHTML = `
+    <h1>Hvordan eksportere til kalender</h1>
+    <p>Trykk på <button id="bettervisma-export" style="transform: unset">Eksporter
+        til kalender</button>. Dette vil laste ned en <code>.ics</code> fil for uken du har åpen. Du kan legge denne
+        filen inn direkte i din personlige kalender, eller importere den i f.eks. Google kalender.</p>
+    <p><i><b>NB!</b> Eksportert timeplan blir ikke automatisk oppdatert, og blir heller ikke slettet hvis du
+        importerer på nytt. Pass på å slette eksisterende kalender hvis du vil importere på nytt.</i></p>
+    <button onclick="this.parentElement.close()">Lukk</button>
+`;
+helpDialog.querySelector("#bettervisma-export").addEventListener("click", () => exportCalendar());
+
+// Add help dialog to document
+document.body.appendChild(helpDialog);
 
 // Add elements on mutation
 let observer = new MutationObserver(() =>
@@ -109,7 +123,6 @@ setTimeout(() =>
 {
     console.clear();
 
-    console.debug("Loaded BetterVisma")
     console.log("%c[BetterVisma] Using BetterVisma", `
         font-size: 1.6rem;
     `);
@@ -117,7 +130,7 @@ setTimeout(() =>
     console.info("%chttps://yessness.com/bettervisma", `
         color: #007aca;
     `);
-}, 1000);
+}, 2000);
 
 // Function for exporting the calendar
 function exportCalendar()
@@ -201,27 +214,4 @@ function exportCalendar()
     // Download the calendar file in .ics format
     calendar.download('visma-export', '.ics');
     console.info("[BetterVisma] [INFO] Export successful, file downloaded");
-}
-
-// Function for opening the help menu
-function openHelpMenu()
-{
-    // Create export button
-    const helpMenu = document.createElement("div");
-    helpMenu.innerHTML = `
-        <div>
-            <h1>Hvordan eksportere til kalender</h1>
-            <p>Trykk på <button id="bettervisma-export" style="transform: unset">Eksporter
-                til kalender</button>. Dette vil laste ned en <code>.ics</code> fil. Du kan åpne denne filen for å legge
-                den inn direkte i ditt operativsystem, eller importere den i f.eks. Google kalender.</p>
-            <p><i><b>NB!</b> Eksportert timeplan blir ikke automatisk oppdatert, og blir heller ikke slettet hvis du
-                importerer på nytt. Pass på å slette eksisterende kalender hvis du vil importere på nytt.</i></p>
-            <button onclick="this.parentElement.parentElement.remove()">Lukk</button>
-        </div>
-    `;
-
-    helpMenu.querySelector("#bettervisma-export").onclick = exportCalendar;
-
-    helpMenu.id = "bettervisma-help-menu"
-    document.body.appendChild(helpMenu);
 }
