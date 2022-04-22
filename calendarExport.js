@@ -1,3 +1,6 @@
+// Runtime variables
+const version = "2.1";
+
 // Add custom stylesheet
 const stylesheet = document.createElement("style");
 stylesheet.innerHTML = `
@@ -32,8 +35,8 @@ stylesheet.innerHTML = `
     transform: translate(20px, 5px);
 }
 
-/* Help dialog */
-#bettervisma-help-dialog
+/* Dialogs */
+dialog
 {
     max-width: 40rem;
     padding: 0 2rem 2rem;
@@ -95,13 +98,29 @@ helpDialog.innerHTML = `
 `;
 helpDialog.querySelector("#bettervisma-export").addEventListener("click", () => exportCalendar());
 
-// Add help dialog to document
+// Create update dialog
+const updateDialog = document.createElement("dialog");
+updateDialog.id = "bettervisma-update-dialog";
+updateDialog.innerHTML = `
+    <h1>BetterVisma har blitt oppdatert!</h1>
+    <h3>Nytt i versjon ${version}:</h3>
+    <ul>
+        <li>Det er nå tydeligere å se hvor lenge av dagen er igjen</li>
+        <li>Hjelpemenyen er blitt utbedret</li>
+        <li>Fikset en bug der enkelte elementer ikke ble vist på mindre skjermer</li>
+    </ul>
+    <button onclick="this.parentElement.close();localStorage['bettervisma-version'] = ${version}">Lukk</button>
+`;
+
+// Add elements to document
 document.body.appendChild(helpDialog);
+document.body.appendChild(updateDialog);
+console.info("[BetterVisma] [INFO] Finished loading");
 
 // Add elements on mutation
 let observer = new MutationObserver(() =>
 {
-    const node = document.querySelector(".userTimetable_timetableFilters_left.userTimetable_timetableFilters_left_xl");
+    const node = document.querySelector(".userTimetable_timetableFilters_left");
 
     if (node)
     {
@@ -121,8 +140,10 @@ observer.observe(document.body, { childList: true, subtree: true, attributes: fa
 // Greet user after a timeout to avoid warning spam
 setTimeout(() =>
 {
+    // Clear all errors posted by Visma for no reason
     console.clear();
 
+    // Print welcome message
     console.log("%c[BetterVisma] Using BetterVisma", `
         font-size: 1.6rem;
     `);
@@ -130,6 +151,9 @@ setTimeout(() =>
     console.info("%chttps://yessness.com/bettervisma", `
         color: #007aca;
     `);
+
+    // Open update dialog if the user is on a new version
+    if ((localStorage["bettervisma-version"] || 0) !== version) updateDialog.showModal();
 }, 2000);
 
 // Function for exporting the calendar
