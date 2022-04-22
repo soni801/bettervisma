@@ -1,5 +1,5 @@
 // Runtime variables
-const version = "2.1";
+const version = "2.2";
 
 // Add custom stylesheet
 const stylesheet = document.createElement("style");

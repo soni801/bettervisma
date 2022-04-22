@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "BetterVisma",
-    "version": "2.1",
+    "version": "2.2",
     "description": "Adds various fixes and improvements to Visma, primarily an option to export a week of your schedule to a calendar .ics file",
 
     "icons": {
