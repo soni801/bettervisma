@@ -1,68 +1,12 @@
 // Runtime variables
-const version = "2.2";
+const version = "2.2.1";
 
-// Add custom stylesheet
-const stylesheet = document.createElement("style");
-stylesheet.innerHTML = `
-/* Export button */
-#bettervisma-export
-{
-    height: 34px;
-    padding: 7.5px;
-    background: transparent;
-    border: 0.071em solid #ccc;
-    border-radius: 0.286em;
-    font-weight: 600;
-    transform: translate(1rem, .4rem);
-    transition: 100ms ease;
-}
-
-#bettervisma-export:hover
-{
-    background: #edeeef;
-}
-
-#bettervisma-export:active
-{
-    background: #dcddde;
-}
-
-/* Help button */
-#bettervisma-help
-{
-    cursor: pointer;
-    user-select: none;
-    transform: translate(20px, 5px);
-}
-
-/* Dialogs */
-dialog
-{
-    max-width: 40rem;
-    padding: 0 2rem 2rem;
-    border: none;
-    border-radius: 1rem;
-    line-height: 1.6rem;
-    box-shadow: 0 0 2rem rgba(0, 0, 0, .3);
-}
-
-/* Current day */
-.active.Timetable-TimetableDays_day
-{
-    background: rgba(0, 0, 0, .07);
-}
-
-/* Current time line */
-.Timetable-TimetableNowLine
-{
-    height: 2px !important;
-    z-index: 1;
-    filter: drop-shadow(0 0 4px rgba(0, 0, 0, .6));
-}
-`;
-
-stylesheet.id ="bettervisma-style";
-document.head.appendChild(stylesheet);
+// Add BetterVisma stylesheet
+const styleLink = document.createElement("link");
+styleLink.setAttribute("href", browser.runtime.getURL("bettervisma.css"));
+styleLink.setAttribute("rel", "stylesheet");
+styleLink.id = "bettervisma-style";
+document.head.appendChild(styleLink);
 
 // Add google fonts
 const googleFontsLink = document.createElement("link");
@@ -207,10 +151,18 @@ function exportCalendar()
     document.querySelectorAll(".Timetable-TimetableItem").forEach(e =>
     {
         // Get data from timetable item
-        const startTime = e.querySelector(".Timetable-TimetableItem-hours").innerHTML.substring(48, 53);
-        const endTime = e.querySelector(".Timetable-TimetableItem-hours").innerHTML.substring(56, 61);
-        const subject = e.querySelector(".Timetable-TimetableItem-subject-name").innerHTML.trim();
-        const location = e.querySelector(".Timetable-TimetableItem-location").innerHTML.substring(53).trim();
+        let startTime, endTime, subject, location;
+        try
+        {
+            startTime = e.querySelector(".Timetable-TimetableItem-hours").innerHTML.substring(48, 53);
+            endTime = e.querySelector(".Timetable-TimetableItem-hours").innerHTML.substring(56, 61);
+            subject = e.querySelector(".Timetable-TimetableItem-subject-name").innerHTML.trim();
+            location = e.querySelector(".Timetable-TimetableItem-location").innerHTML.substring(53).trim();
+        }
+        catch
+        {
+            console.warn(`[BetterVisma] [WARN] Failed to parse location for timetable item ${subject}, does it have one? Continuing without location.`);
+        }
 
         // Parse time
         const startHours = parseInt(startTime.substring(0, 2));

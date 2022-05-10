@@ -1,13 +1,12 @@
 {
     "manifest_version": 2,
     "name": "BetterVisma",
-    "version": "2.2",
+    "version": "2.2.1",
     "description": "Adds various fixes and improvements to Visma, primarily an option to export a week of your schedule to a calendar .ics file",
-
+    "homepage_url": "https://yessness.com/bettervisma",
     "icons": {
         "48": "icons/calendar-48.png"
     },
-
     "content_scripts": [
         {
             "matches": [
@@ -16,14 +15,16 @@
             "js": [
                 "libFileSaver.min.js",
                 "libIcs.min.js",
-                "calendarExport.js"
+                "bettervisma.js"
             ]
         }
     ],
-
     "browser_specific_settings": {
         "gecko": {
             "update_url": "https://cdn.yessness.com/browser-extensions/updates.json"
         }
-    }
+    },
+    "web_accessible_resources": [
+        "bettervisma.css"
+    ]
 }
