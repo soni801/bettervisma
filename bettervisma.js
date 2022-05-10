@@ -49,11 +49,10 @@ updateDialog.innerHTML = `
     <h1>BetterVisma har blitt oppdatert!</h1>
     <h3>Nytt i versjon ${version}:</h3>
     <ul>
-        <li>Det er nå tydeligere å se hvor lenge av dagen er igjen</li>
-        <li>Hjelpemenyen er blitt utbedret</li>
-        <li>Fikset en bug der enkelte elementer ikke ble vist på mindre skjermer</li>
+        <li>Fikset en bug der man ikke kunne eksportere timer som ikke hadde et rom</li>
+        <li>Generelle ytelsesforbedringer</li>
     </ul>
-    <button onclick="this.parentElement.close();localStorage['bettervisma-version'] = ${version}">Lukk</button>
+    <button onclick="this.parentElement.close();localStorage['bettervisma-version'] = '${version}'">Lukk</button>
 `;
 
 // Add elements to document
